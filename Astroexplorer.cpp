@@ -5,100 +5,102 @@
 #include <cstdlib>
 #include <ctime>
 
+#include "spaceship.h"
+
 using namespace sf;
 using namespace std;
 
-class SpaceShip {
-	const unsigned short SPRITE_SIZE_X = 49;
-	const unsigned short SPRITE_SIZE_Y = 46;
-	const unsigned short FIRE_SIZE_X = 12;
-	const unsigned short FIRE_SIZE_Y = 41;
-	Sprite shipSprite;
-	Sprite firstFire;
-	Sprite secondFire;
-
-public:
-	SpaceShip(Texture& textureArg, Texture& fireTexture) {
-		shipSprite.setTexture(textureArg);
-		shipSprite.setTextureRect(IntRect(345, 47, SPRITE_SIZE_X, SPRITE_SIZE_Y));//������ ������� �� ���� - 49, �� ������ - 48
-		shipSprite.setPosition(300, 450);
-		shipSprite.setColor(Color::Yellow);
-		firstFire.setTexture(fireTexture);
-		firstFire.setTextureRect(IntRect(30, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-		firstFire.setRotation(180);
-		secondFire.setTexture(fireTexture);
-		secondFire.setTextureRect(IntRect(30, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-		secondFire.setRotation(180);
-	}
-
-	void setFireSprite() {
-		Vector2f buf;
-		buf = shipSprite.getPosition();
-		buf.x += 23;
-		buf.y += 82;
-		firstFire.setPosition(buf);
-		buf = shipSprite.getPosition();
-		buf.x += 38;
-		buf.y += 82;
-		secondFire.setPosition(buf);
-	}
-
-	void changeFireSprite(int frame) {
-		switch (frame) {
-		case 50:
-			firstFire.setTextureRect(IntRect(30, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-			secondFire.setTextureRect(IntRect(30, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-			break;
-		case 100:
-			firstFire.setTextureRect(IntRect(47, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-			secondFire.setTextureRect(IntRect(64, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-			break;
-		case 150:
-			firstFire.setTextureRect(IntRect(64, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-			secondFire.setTextureRect(IntRect(47, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-			break;
-		case 200:
-			firstFire.setTextureRect(IntRect(83, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-			secondFire.setTextureRect(IntRect(83, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-			break;
-		}
-	}
-
-	void moveShip(int arg, float time) {
-		Vector2f buf;
-		buf = shipSprite.getPosition();
-		switch (arg) {
-		case 1:
-			if (buf.x >= 0)
-				shipSprite.move(-0.1 * time, 0);
-			break;
-		case 2:
-			if (buf.x <= 551)
-				shipSprite.move(0.1 * time, 0);
-			break;
-		case 3:
-			if (buf.y >= 0)
-				shipSprite.move(0, -0.1 * time);
-			break;
-		case 4:
-			if (buf.y <= 854)
-				shipSprite.move(0, 0.1 * time);
-			break;
-		}
-	}
-
-	Sprite getSprite() {
-		return shipSprite;
-	}
-
-	Sprite getFirstFire() {
-		return firstFire;
-	}
-
-	Sprite getSecondFire() {
-		return secondFire;
-	}
-};
+//class SpaceShip {
+//	const unsigned short SPRITE_SIZE_X = 49;
+//	const unsigned short SPRITE_SIZE_Y = 46;
+//	const unsigned short FIRE_SIZE_X = 12;
+//	const unsigned short FIRE_SIZE_Y = 41;
+//	Sprite shipSprite;
+//	Sprite firstFire;
+//	Sprite secondFire;
+//
+//public:
+//	SpaceShip(Texture& textureArg, Texture& fireTexture) {
+//		shipSprite.setTexture(textureArg);
+//		shipSprite.setTextureRect(IntRect(345, 47, SPRITE_SIZE_X, SPRITE_SIZE_Y));//������ ������� �� ���� - 49, �� ������ - 48
+//		shipSprite.setPosition(300, 450);
+//		shipSprite.setColor(Color::Yellow);
+//		firstFire.setTexture(fireTexture);
+//		firstFire.setTextureRect(IntRect(30, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
+//		firstFire.setRotation(180);
+//		secondFire.setTexture(fireTexture);
+//		secondFire.setTextureRect(IntRect(30, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
+//		secondFire.setRotation(180);
+//	}
+//
+//	void setFireSprite() {
+//		Vector2f buf;
+//		buf = shipSprite.getPosition();
+//		buf.x += 23;
+//		buf.y += 82;
+//		firstFire.setPosition(buf);
+//		buf = shipSprite.getPosition();
+//		buf.x += 38;
+//		buf.y += 82;
+//		secondFire.setPosition(buf);
+//	}
+//
+//	void changeFireSprite(int frame) {
+//		switch (frame) {
+//		case 50:
+//			firstFire.setTextureRect(IntRect(30, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
+//			secondFire.setTextureRect(IntRect(30, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
+//			break;
+//		case 100:
+//			firstFire.setTextureRect(IntRect(47, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
+//			secondFire.setTextureRect(IntRect(64, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
+//			break;
+//		case 150:
+//			firstFire.setTextureRect(IntRect(64, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
+//			secondFire.setTextureRect(IntRect(47, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
+//			break;
+//		case 200:
+//			firstFire.setTextureRect(IntRect(83, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
+//			secondFire.setTextureRect(IntRect(83, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
+//			break;
+//		}
+//	}
+//
+//	void moveShip(int arg, float time) {
+//		Vector2f buf;
+//		buf = shipSprite.getPosition();
+//		switch (arg) {
+//		case 1:
+//			if (buf.x >= 0)
+//				shipSprite.move(-0.1 * time, 0);
+//			break;
+//		case 2:
+//			if (buf.x <= 551)
+//				shipSprite.move(0.1 * time, 0);
+//			break;
+//		case 3:
+//			if (buf.y >= 0)
+//				shipSprite.move(0, -0.1 * time);
+//			break;
+//		case 4:
+//			if (buf.y <= 854)
+//				shipSprite.move(0, 0.1 * time);
+//			break;
+//		}
+//	}
+//
+//	Sprite getSprite() {
+//		return shipSprite;
+//	}
+//
+//	Sprite getFirstFire() {
+//		return firstFire;
+//	}
+//
+//	Sprite getSecondFire() {
+//		return secondFire;
+//	}
+//};
 
 class Map {
 	RectangleShape space;//������
@@ -321,24 +323,7 @@ int main(int argc, char** argv) {
 	srand(time(NULL));
 	Clock clock;
 
-	Image shipImage;
-	if (!shipImage.loadFromFile("Images/ship.png")) {
-		shipImage.create(50, 50, Color::Blue);
-	};
-
-	Texture shipTexture;
-	shipTexture.loadFromImage(shipImage);
-	shipImage.~Image();
-
-	Image fireImage;
-	if (!fireImage.loadFromFile("Images/fire.png")) {
-		fireImage.create(50, 50, Color::Red);
-	};
-	Texture fireTexture;
-	fireTexture.loadFromImage(fireImage);
-	fireImage.~Image();
-
-	SpaceShip ship(shipTexture, fireTexture);
+	SpaceShip ship;
 
 	
 	Image alienImage;
@@ -447,7 +432,7 @@ int main(int argc, char** argv) {
 				ship.moveShip(4, time);
 			}
 			ship.changeFireSprite(frame);
-			ship.setFireSprite();
+
 			if (spawnTime > 300)
 				space.createCloseStars();
 			displayCloseStars = space.getCloseStars();
@@ -474,8 +459,8 @@ int main(int argc, char** argv) {
 			for (int i = 0; i < displayAst.size(); ++i)
 				window.draw(displayAst[i]);
 			window.draw(ship.getSprite());//��������� �������
-			window.draw(ship.getFirstFire());
-			window.draw(ship.getSecondFire());
+			window.draw(ship.getFirstFireSprite());
+			window.draw(ship.getSecondFireSprite());
 			window.display();
 			for (int i = 0; i < displayAst.size(); ++i) {
 				if (displayAst[i].getGlobalBounds().intersects(ship.getSprite().getGlobalBounds())) {
