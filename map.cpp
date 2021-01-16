@@ -74,7 +74,7 @@ Map& Map::movePlanet()
 void Map::createStars(std::vector<CircleShape>& stars, const Color& color)
 {
 	int quantity = rand() % 2;
-	int posX = rand() % 890 + 340;
+	int posX = rand() % 600 + 340;
 	int posY = 0;
 	for (int i = 0; i < quantity; ++i) {
 		CircleShape star(3);

@@ -11,7 +11,7 @@ Asteroids::Asteroids()
 
 Asteroids& Asteroids::createAsteroids()
 {
-	int posX = rand() % 890 + 340;
+	int posX = rand() % 600 + 340;
 	Sprite newAsteroid;
 	newAsteroid.setTexture(m_asteroidTexture);
 	newAsteroid.setTextureRect(m_asteroidSprite.getTextureRect());
