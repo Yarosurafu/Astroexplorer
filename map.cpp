@@ -21,6 +21,7 @@ Map::Map() :
 	//-----Настройка спрайтов-----
 	m_space.setSize(Vector2f(600, 900));
 	m_space.setFillColor(Color(9, 18, 31));
+	m_space.setPosition(Vector2f(340, 0));
 	m_alienPlanet.setTexture(m_alienTexture);
 	m_alienPlanet.setColor(Color(104, 104, 104));
 	m_sandPlanet.setTexture(m_sandTexture);
@@ -36,7 +37,7 @@ Map& Map::createPlanet()
 	//выход, если планета уже есть
 	if (isPlanet()) return *this;
 	
-	int posX = rand() % 550;
+	int posX = rand() % 890 + 340;
 	int posY = 0;
 
 	switch (rand() % 3) {
@@ -73,7 +74,7 @@ Map& Map::movePlanet()
 void Map::createStars(std::vector<CircleShape>& stars, const Color& color)
 {
 	int quantity = rand() % 2;
-	int posX = rand() % 600;
+	int posX = rand() % 890 + 340;
 	int posY = 0;
 	for (int i = 0; i < quantity; ++i) {
 		CircleShape star(3);

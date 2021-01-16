@@ -21,7 +21,7 @@ SpaceShip::SpaceShip() :
 	//Настройка спрайтов
 	m_shipSprite.setTexture(m_shipTexture);
 	m_shipSprite.setTextureRect(IntRect(345, 47, SPRITE_SIZE_X, SPRITE_SIZE_Y));
-	m_shipSprite.setPosition(300, 450);
+	m_shipSprite.setPosition(640, 450);
 	m_shipSprite.setColor(Color::Yellow);
 
 	m_firstFire.setTexture(m_fireTexture);
@@ -81,11 +81,11 @@ SpaceShip& SpaceShip::moveShip(int direction, float time)
 	currentPosition = m_shipSprite.getPosition();
 	switch (direction) {
 	case 1:
-		if (currentPosition.x >= 0)
+		if (currentPosition.x >= 340)
 			m_shipSprite.move(-0.1 * time, 0);
 		break;
 	case 2:
-		if (currentPosition.x <= 551)
+		if (currentPosition.x <= 891)
 			m_shipSprite.move(0.1 * time, 0);
 		break;
 	case 3:

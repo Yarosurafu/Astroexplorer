@@ -119,6 +119,8 @@ int main(int argc, char** argv) {
 	font.loadFromFile("Fonts/xenosphere.ttf");
 
 	RenderWindow window(VideoMode(600, 900), "Astroexplorer");
+	RenderWindow gameWindow(VideoMode(1280, 900), "Astroexplorer");
+	gameWindow.setVisible(false);
 	window.setFramerateLimit(120);
 	int windowState = 1;
 
@@ -129,15 +131,25 @@ int main(int argc, char** argv) {
 	while (window.isOpen()) {
 		Event event;
 		while (window.pollEvent(event)) {
-			if (event.type == Event::Closed)
+			if (event.type == Event::Closed) {
 				window.close();
+				gameWindow.close();
+			}
 		}
-
+		while (gameWindow.pollEvent(event)) {
+			if(event.type == Event::Closed) {
+				window.close();
+				gameWindow.close();
+			}
+		}
+		//Главное меню
 		if (windowState == 1) {
 			if (Keyboard::isKeyPressed(Keyboard::Return)) {
+				window.setVisible(false);
 				windowState = 2;
 				main.musicOff();
 				gameSound.musicOn();
+				gameWindow.setVisible(true);
 			}
 			Sprite background;
 			Image arg;
@@ -158,7 +170,7 @@ int main(int argc, char** argv) {
 			play.setCharacterSize(30);
 			play.setPosition(90, 450);
 			Text author;
-			author.setString("Created by Svirin Yaroslav, SP-226");
+			author.setString("Created by Svirin Yaroslav");
 			author.setFont(font);
 			author.setFillColor(Color::White);
 			author.setCharacterSize(20);
@@ -208,25 +220,27 @@ int main(int argc, char** argv) {
 			displayAst = asteroids.getAsteroids();
 			
 			space.createPlanet();
-			window.clear();
-			window.draw(space.getSpace());
-			if (space.isPlanet()) window.draw(space.getPlanet());
+			gameWindow.clear();
+			gameWindow.draw(space.getSpace());
+			if (space.isPlanet()) gameWindow.draw(space.getPlanet());
 			for (int i = 0; i < displayCloseStars.size(); ++i)
-				window.draw(displayCloseStars[i]);
+				gameWindow.draw(displayCloseStars[i]);
 			for (int i = 0; i < displayFarStars.size(); ++i)
-				window.draw(displayFarStars[i]);
+				gameWindow.draw(displayFarStars[i]);
 			for (int i = 0; i < displayAst.size(); ++i)
-				window.draw(displayAst[i]);
-			window.draw(ship.getSprite());
-			window.draw(ship.getFirstFireSprite());
-			window.draw(ship.getSecondFireSprite());
-			window.display();
+				gameWindow.draw(displayAst[i]);
+			gameWindow.draw(ship.getSprite());
+			gameWindow.draw(ship.getFirstFireSprite());
+			gameWindow.draw(ship.getSecondFireSprite());
+			gameWindow.display();
 			for (int i = 0; i < displayAst.size(); ++i) {
 				if (displayAst[i].getGlobalBounds().intersects(ship.getSprite().getGlobalBounds())) {
 					asteroids.deleteAsteroids();
 					windowState = 3;
 					gameSound.musicOff();
 					gameOverSound.musicOn();
+					gameWindow.setVisible(false);
+					window.setVisible(true);
 					break;
 				}
 
@@ -236,8 +250,13 @@ int main(int argc, char** argv) {
 			asteroids.moveAsteroids(time);
 		}
 		else {
-			if (Keyboard::isKeyPressed(Keyboard::Escape)) window.close();
+			if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+				window.close();
+				gameWindow.close();
+			}
 			if (Keyboard::isKeyPressed(Keyboard::Return)) {
+				window.setVisible(false);
+				gameWindow.setVisible(true);
 				gameSound.musicOn();
 				windowState = 2;
 			}
