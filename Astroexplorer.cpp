@@ -69,6 +69,8 @@ int main(int argc, char** argv) {
 	float spawnTime = 0;
 	float spawnTimeAst = 0;
 	int frame = 50;
+	int score{};
+	int highScore{};
 
 	Asteroids asteroids;
 	vector<Sprite> displayAst;
@@ -167,7 +169,10 @@ int main(int argc, char** argv) {
 			spawnTime += time;
 			spawnTimeAst += time;
 			frame++;
-			if (frame > 200) frame = 50;
+			if (frame > 200) { 
+				frame = 50; 
+				++score;
+			}
 			clock.restart();
 			if (Keyboard::isKeyPressed(Keyboard::Left)) {
 				ship.moveShip(1, time);
@@ -213,18 +218,37 @@ int main(int argc, char** argv) {
 			gameWindow.draw(ship.getSecondFireSprite());
 			gameWindow.draw(carbon);
 			gameWindow.draw(carbon2);
+
+			Text highScoreText;
+			highScoreText.setString("High score:\n" + std::to_string(highScore));
+			highScoreText.setFillColor(Color::Red);
+			highScoreText.setFont(font);
+			highScoreText.setCharacterSize(30);
+			highScoreText.setPosition(978, 245);
+
+			Text scoreText;
+			scoreText.setString("Score:\n" + std::to_string(score));
+			scoreText.setFillColor(Color::Red);
+			scoreText.setFont(font);
+			scoreText.setCharacterSize(30);
+			scoreText.setPosition(978, 400);
+			gameWindow.draw(highScoreText);
+			gameWindow.draw(scoreText);
+
 			gameWindow.display();
 			for (int i = 0; i < displayAst.size(); ++i) {
 				if (displayAst[i].getGlobalBounds().intersects(ship.getSprite().getGlobalBounds())) {
+					if (score > highScore) highScore = score;
+					score = 0;
 					asteroids.deleteAsteroids();
 					windowState = 3;
 					gameSound.musicOff();
 					gameOverSound.musicOn();
 					gameWindow.setVisible(false);
+					ship.setSpawn();
 					window.setVisible(true);
 					break;
 				}
-
 			}
 			space.moveStars(time);
 			space.movePlanet();
