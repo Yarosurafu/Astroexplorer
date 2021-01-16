@@ -7,51 +7,52 @@
 
 #include "spaceship.h"
 #include "map.h"
+#include "asteroids.h"
 
 using namespace sf;
 using namespace std;
 
-class Asteroids {
-	Sprite asteroid;
-	vector<Sprite> asteroids;
-
-public:
-	Asteroids(Texture& astTexture) {
-		asteroid.setTexture(astTexture);
-		asteroid.setTextureRect(IntRect(98, 130, 26, 29));
-	}
-
-	void createAsteroids() {
-		int posX = rand() % 600;
-		Sprite buf;
-		buf.setTexture(*asteroid.getTexture());
-		buf.setTextureRect(asteroid.getTextureRect());
-		buf.setPosition(posX, 0);
-		asteroids.push_back(buf);
-	}
-
-	void moveAsteroids(float time) {
-		Vector2f buf;
-		for (int i = 0; i < asteroids.size(); ++i) {
-			buf = asteroids[i].getPosition();
-			buf.y += 0.05 * time;
-			if (buf.y > 900) {
-				asteroids.erase(asteroids.begin() + i);
-				continue;
-			}
-			asteroids[i].setPosition(buf);
-		}
-	}
-
-	void deleteAsteroids() {
-		for (int i = asteroids.size() - 1; i >= 0; --i)
-			asteroids.erase(asteroids.begin() + i);
-	}
-
-	vector<Sprite> getAsteroids() {
-		return asteroids;
-	}
-};
+//class Asteroids {
+//	Sprite asteroid;
+//	vector<Sprite> asteroids;
+//
+//public:
+//	Asteroids(Texture& astTexture) {
+//		asteroid.setTexture(astTexture);
+//		asteroid.setTextureRect(IntRect(98, 130, 26, 29));
+//	}
+//
+//	void createAsteroids() {
+//		int posX = rand() % 600;
+//		Sprite buf;
+//		buf.setTexture(*asteroid.getTexture());
+//		buf.setTextureRect(asteroid.getTextureRect());
+//		buf.setPosition(posX, 0);
+//		asteroids.push_back(buf);
+//	}
+//
+//	void moveAsteroids(float time) {
+//		Vector2f buf;
+//		for (int i = 0; i < asteroids.size(); ++i) {
+//			buf = asteroids[i].getPosition();
+//			buf.y += 0.05 * time;
+//			if (buf.y > 900) {
+//				asteroids.erase(asteroids.begin() + i);
+//				continue;
+//			}
+//			asteroids[i].setPosition(buf);
+//		}
+//	}
+//
+//	void deleteAsteroids() {
+//		for (int i = asteroids.size() - 1; i >= 0; --i)
+//			asteroids.erase(asteroids.begin() + i);
+//	}
+//
+//	vector<Sprite> getAsteroids() {
+//		return asteroids;
+//	}
+//};
 
 class MainTheme {
 	Music theme;
@@ -111,12 +112,7 @@ int main(int argc, char** argv) {
 	float spawnTimeAst = 0;
 	int frame = 50;
 
-	Image astImg;
-	astImg.loadFromFile("Images/effects.png");
-	Texture astText;
-	astText.loadFromImage(astImg);
-	astImg.~Image();
-	Asteroids asteroids(astText);
+	Asteroids asteroids;
 	vector<Sprite> displayAst;
 
 	Font font;
@@ -210,10 +206,10 @@ int main(int argc, char** argv) {
 			}
 
 			displayAst = asteroids.getAsteroids();
-			//��������� �������
+			
 			space.createPlanet();
 			window.clear();
-			window.draw(space.getSpace());//��������� �������
+			window.draw(space.getSpace());
 			if (space.isPlanet()) window.draw(space.getPlanet());
 			for (int i = 0; i < displayCloseStars.size(); ++i)
 				window.draw(displayCloseStars[i]);
@@ -221,7 +217,7 @@ int main(int argc, char** argv) {
 				window.draw(displayFarStars[i]);
 			for (int i = 0; i < displayAst.size(); ++i)
 				window.draw(displayAst[i]);
-			window.draw(ship.getSprite());//��������� �������
+			window.draw(ship.getSprite());
 			window.draw(ship.getFirstFireSprite());
 			window.draw(ship.getSecondFireSprite());
 			window.display();
@@ -235,7 +231,7 @@ int main(int argc, char** argv) {
 				}
 
 			}
-			space.moveStars(time);//����� ��������� �����
+			space.moveStars(time);
 			space.movePlanet();
 			asteroids.moveAsteroids(time);
 		}
