@@ -74,6 +74,12 @@ SpaceShip& SpaceShip::changeFireSprite(int frame)
 	return *this;
 }
 
+SpaceShip& SpaceShip::setSpawn()
+{
+	m_shipSprite.setPosition(640, 450);
+	return *this;
+}
+
 //смена позиции корабля
 SpaceShip& SpaceShip::moveShip(int direction, float time)
 {

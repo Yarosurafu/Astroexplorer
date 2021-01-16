@@ -23,6 +23,7 @@ public:
 	SpaceShip();
 	SpaceShip& moveShip(int direction, float time);//смена позиции корабля
 	SpaceShip& changeFireSprite(int frame);//смена спрайта огня для анимации
+	SpaceShip& setSpawn();
 	Sprite& getFirstFireSprite() { return m_firstFire; }
 	Sprite& getSecondFireSprite() { return m_secondFire;  }
 	Sprite& getSprite() { return m_shipSprite;  }
