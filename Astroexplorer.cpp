@@ -12,48 +12,6 @@
 using namespace sf;
 using namespace std;
 
-//class Asteroids {
-//	Sprite asteroid;
-//	vector<Sprite> asteroids;
-//
-//public:
-//	Asteroids(Texture& astTexture) {
-//		asteroid.setTexture(astTexture);
-//		asteroid.setTextureRect(IntRect(98, 130, 26, 29));
-//	}
-//
-//	void createAsteroids() {
-//		int posX = rand() % 600;
-//		Sprite buf;
-//		buf.setTexture(*asteroid.getTexture());
-//		buf.setTextureRect(asteroid.getTextureRect());
-//		buf.setPosition(posX, 0);
-//		asteroids.push_back(buf);
-//	}
-//
-//	void moveAsteroids(float time) {
-//		Vector2f buf;
-//		for (int i = 0; i < asteroids.size(); ++i) {
-//			buf = asteroids[i].getPosition();
-//			buf.y += 0.05 * time;
-//			if (buf.y > 900) {
-//				asteroids.erase(asteroids.begin() + i);
-//				continue;
-//			}
-//			asteroids[i].setPosition(buf);
-//		}
-//	}
-//
-//	void deleteAsteroids() {
-//		for (int i = asteroids.size() - 1; i >= 0; --i)
-//			asteroids.erase(asteroids.begin() + i);
-//	}
-//
-//	vector<Sprite> getAsteroids() {
-//		return asteroids;
-//	}
-//};
-
 class MainTheme {
 	Music theme;
 public:
@@ -120,7 +78,28 @@ int main(int argc, char** argv) {
 
 	RenderWindow window(VideoMode(600, 900), "Astroexplorer");
 	RenderWindow gameWindow(VideoMode(1280, 900), "Astroexplorer");
+	//Загрузка текстуры карбона
+	Image carbonImage;
+	if (!carbonImage.loadFromFile("Images/carbon.png")) {
+		carbonImage.create(340, 900);
+	}
+	Texture carbonTexture;
+	carbonTexture.loadFromImage(carbonImage);
+	Sprite carbon;
+	carbon.setTexture(carbonTexture);
+	carbon.setPosition(Vector2f(0, 0));
+
+	Image rightPanelImage;
+	if (!rightPanelImage.loadFromFile("Images/right_panel.png")) {
+		rightPanelImage.create(340, 900);
+	}
+	Texture rightPanelTexture;
+	rightPanelTexture.loadFromImage(rightPanelImage);
+	Sprite carbon2;
+	carbon2.setTexture(rightPanelTexture);
+	carbon2.setPosition(Vector2f(940, 0));
 	gameWindow.setVisible(false);
+
 	window.setFramerateLimit(120);
 	int windowState = 1;
 
@@ -232,6 +211,8 @@ int main(int argc, char** argv) {
 			gameWindow.draw(ship.getSprite());
 			gameWindow.draw(ship.getFirstFireSprite());
 			gameWindow.draw(ship.getSecondFireSprite());
+			gameWindow.draw(carbon);
+			gameWindow.draw(carbon2);
 			gameWindow.display();
 			for (int i = 0; i < displayAst.size(); ++i) {
 				if (displayAst[i].getGlobalBounds().intersects(ship.getSprite().getGlobalBounds())) {
