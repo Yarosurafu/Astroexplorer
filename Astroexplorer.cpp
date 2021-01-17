@@ -5,270 +5,12 @@
 #include <cstdlib>
 #include <ctime>
 
+#include "spaceship.h"
+#include "map.h"
+#include "asteroids.h"
+
 using namespace sf;
 using namespace std;
-
-class SpaceShip {
-	const unsigned short SPRITE_SIZE_X = 49;
-	const unsigned short SPRITE_SIZE_Y = 46;
-	const unsigned short FIRE_SIZE_X = 12;
-	const unsigned short FIRE_SIZE_Y = 41;
-	Sprite shipSprite;
-	Sprite firstFire;
-	Sprite secondFire;
-
-public:
-	SpaceShip(Texture& textureArg, Texture& fireTexture) {
-		shipSprite.setTexture(textureArg);
-		shipSprite.setTextureRect(IntRect(345, 47, SPRITE_SIZE_X, SPRITE_SIZE_Y));//������ ������� �� ���� - 49, �� ������ - 48
-		shipSprite.setPosition(300, 450);
-		shipSprite.setColor(Color::Yellow);
-		firstFire.setTexture(fireTexture);
-		firstFire.setTextureRect(IntRect(30, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-		firstFire.setRotation(180);
-		secondFire.setTexture(fireTexture);
-		secondFire.setTextureRect(IntRect(30, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-		secondFire.setRotation(180);
-	}
-
-	void setFireSprite() {
-		Vector2f buf;
-		buf = shipSprite.getPosition();
-		buf.x += 23;
-		buf.y += 82;
-		firstFire.setPosition(buf);
-		buf = shipSprite.getPosition();
-		buf.x += 38;
-		buf.y += 82;
-		secondFire.setPosition(buf);
-	}
-
-	void changeFireSprite(int frame) {
-		switch (frame) {
-		case 50:
-			firstFire.setTextureRect(IntRect(30, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-			secondFire.setTextureRect(IntRect(30, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-			break;
-		case 100:
-			firstFire.setTextureRect(IntRect(47, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-			secondFire.setTextureRect(IntRect(64, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-			break;
-		case 150:
-			firstFire.setTextureRect(IntRect(64, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-			secondFire.setTextureRect(IntRect(47, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-			break;
-		case 200:
-			firstFire.setTextureRect(IntRect(83, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-			secondFire.setTextureRect(IntRect(83, 24, FIRE_SIZE_X, FIRE_SIZE_Y));
-			break;
-		}
-	}
-
-	void moveShip(int arg, float time) {
-		Vector2f buf;
-		buf = shipSprite.getPosition();
-		switch (arg) {
-		case 1:
-			if (buf.x >= 0)
-				shipSprite.move(-0.1 * time, 0);
-			break;
-		case 2:
-			if (buf.x <= 551)
-				shipSprite.move(0.1 * time, 0);
-			break;
-		case 3:
-			if (buf.y >= 0)
-				shipSprite.move(0, -0.1 * time);
-			break;
-		case 4:
-			if (buf.y <= 854)
-				shipSprite.move(0, 0.1 * time);
-			break;
-		}
-	}
-
-	Sprite getSprite() {
-		return shipSprite;
-	}
-
-	Sprite getFirstFire() {
-		return firstFire;
-	}
-
-	Sprite getSecondFire() {
-		return secondFire;
-	}
-};
-
-class Map {
-	RectangleShape space;//������
-	vector<CircleShape> closeStars;//������� � ������������
-	vector<CircleShape> farStars;//������� ������
-	Sprite alienPlanet;
-	Sprite sandPlanet;
-	Sprite earthPlanet;
-	vector<Sprite> planets;
-
-public:
-	Map(Texture& alien, Texture& sand, Texture& earth) {
-		Vector2f sizeArg(600, 900);//������ �������������� "�������"
-		Color col(9, 18, 31);//���� �������
-		space.setSize(sizeArg);//������ ������ ��������������
-		space.setFillColor(col);//������ ���� ��������������
-		alienPlanet.setTexture(alien);
-		alienPlanet.setColor(Color(104, 104, 104));
-		sandPlanet.setTexture(sand);
-		sandPlanet.setColor(Color(104, 104, 104));
-		earthPlanet.setTexture(earth);
-		earthPlanet.setColor(Color(104, 104, 104));
-	}
-
-	void createPlanet() {
-		int posX = rand() % 550;
-		int posY = 0;
-		if (planets.size() != 0)
-			return;
-		int planetType = rand() % 3;
-		switch (planetType) {
-		case 0:
-			alienPlanet.setPosition(posX, posY);
-			planets.push_back(alienPlanet);
-			break;
-		case 1:
-			sandPlanet.setPosition(posX, posY);
-			planets.push_back(sandPlanet);
-			break;
-		case 2:
-			earthPlanet.setPosition(posX, posY);
-			planets.push_back(earthPlanet);
-			break;
-		}
-	}
-
-	void movePlanet() {
-		if (planets.size() == 0) return;
-		Vector2f buf;
-		buf = planets[0].getPosition();
-		if (buf.y > 900) {
-			planets.pop_back();
-			return;
-		}
-		buf.y++;
-		planets[0].setPosition(buf);
-	}
-
-	bool isPlanet() {
-		return (planets.size() != 0);
-	}
-
-	Sprite getPlanet() {
-		return planets[0];
-	}
-
-	void createCloseStars() {//��������� ������� �����
-		int quantity = rand() % 2;//���������� ������������ �����
-		Color colClose(216, 220, 192);
-		int posX = rand() % 600;
-		int posY = 0;
-		for (int i = 0; i < quantity; ++i) {
-			CircleShape star(3);
-			star.setFillColor(colClose);
-			star.setPosition(posX, posY);
-			closeStars.push_back(star);
-		}
-	}
-
-	void createFarStars() {//��������� ������� �����
-		int quantity = rand() % 2;//���������� ������������ �����
-		Color colFar(169, 178, 112);
-		int posX = rand() % 600;
-		int posY = 0;
-		for (int i = 0; i < quantity; ++i) {
-			CircleShape star(2);
-			star.setFillColor(colFar);
-			star.setPosition(posX, posY);
-			farStars.push_back(star);
-		}
-	}
-
-	void moveStars(float time) {//�������� �����
-		Vector2f bufPos;
-		//������� ������
-		for (int i = 0; i < closeStars.size(); ++i) {
-			bufPos = closeStars[i].getPosition();
-			bufPos.y += 0.1 * time;
-			if (bufPos.y > 880) {
-				closeStars.erase(closeStars.begin() + i);
-				continue;
-			}
-			closeStars[i].setPosition(bufPos);
-		}
-		//������� ������
-		for (int i = 0; i < farStars.size(); ++i) {
-			bufPos = farStars[i].getPosition();
-			bufPos.y += 0.05 * time;
-			if (bufPos.y > 880) {
-				farStars.erase(farStars.begin() + i);
-				continue;
-			}
-			farStars[i].setPosition(bufPos);
-		}
-	}
-
-	RectangleShape getSpace() {//������� "�������" ��� ���������
-		return space;
-	}
-
-	vector<CircleShape> getCloseStars() {
-		return closeStars;
-	}
-
-	vector<CircleShape> getFarStars() {
-		return farStars;
-	}
-};
-
-class Asteroids {
-	Sprite asteroid;
-	vector<Sprite> asteroids;
-
-public:
-	Asteroids(Texture& astTexture) {
-		asteroid.setTexture(astTexture);
-		asteroid.setTextureRect(IntRect(98, 130, 26, 29));
-	}
-
-	void createAsteroids() {
-		int posX = rand() % 600;
-		Sprite buf;
-		buf.setTexture(*asteroid.getTexture());
-		buf.setTextureRect(asteroid.getTextureRect());
-		buf.setPosition(posX, 0);
-		asteroids.push_back(buf);
-	}
-
-	void moveAsteroids(float time) {
-		Vector2f buf;
-		for (int i = 0; i < asteroids.size(); ++i) {
-			buf = asteroids[i].getPosition();
-			buf.y += 0.05 * time;
-			if (buf.y > 900) {
-				asteroids.erase(asteroids.begin() + i);
-				continue;
-			}
-			asteroids[i].setPosition(buf);
-		}
-	}
-
-	void deleteAsteroids() {
-		for (int i = asteroids.size() - 1; i >= 0; --i)
-			asteroids.erase(asteroids.begin() + i);
-	}
-
-	vector<Sprite> getAsteroids() {
-		return asteroids;
-	}
-};
 
 class MainTheme {
 	Music theme;
@@ -320,61 +62,46 @@ public:
 int main(int argc, char** argv) {
 	srand(time(NULL));
 	Clock clock;
-
-	Image shipImage;
-	if (!shipImage.loadFromFile("Images/ship.png")) {
-		shipImage.create(50, 50, Color::Blue);
-	};
-
-	Texture shipTexture;
-	shipTexture.loadFromImage(shipImage);
-	shipImage.~Image();
-
-	Image fireImage;
-	if (!fireImage.loadFromFile("Images/fire.png")) {
-		fireImage.create(50, 50, Color::Red);
-	};
-	Texture fireTexture;
-	fireTexture.loadFromImage(fireImage);
-	fireImage.~Image();
-
-	SpaceShip ship(shipTexture, fireTexture);
-
-	
-	Image alienImage;
-	alienImage.loadFromFile("Images/alienPlanet.png");
-	Texture alienTexture;
-	alienTexture.loadFromImage(alienImage);
-
-	Image sandImage;
-	sandImage.loadFromFile("Images/sandPlanet.png");
-	Texture sandTexture;
-	sandTexture.loadFromImage(sandImage);
-
-	Image earthImage;
-	earthImage.loadFromFile("Images/earth.png");
-	Texture earthTexture;
-	earthTexture.loadFromImage(earthImage);
-
-	Map space(alienTexture, sandTexture, earthTexture);
+	SpaceShip ship;
+	Map space;
 	vector<CircleShape> displayCloseStars;
 	vector<CircleShape> displayFarStars;
 	float spawnTime = 0;
 	float spawnTimeAst = 0;
 	int frame = 50;
+	int score{};
+	int highScore{};
 
-	Image astImg;
-	astImg.loadFromFile("Images/effects.png");
-	Texture astText;
-	astText.loadFromImage(astImg);
-	astImg.~Image();
-	Asteroids asteroids(astText);
+	Asteroids asteroids;
 	vector<Sprite> displayAst;
 
 	Font font;
 	font.loadFromFile("Fonts/xenosphere.ttf");
 
 	RenderWindow window(VideoMode(600, 900), "Astroexplorer");
+	RenderWindow gameWindow(VideoMode(1280, 900), "Astroexplorer");
+	//Загрузка текстуры карбона
+	Image carbonImage;
+	if (!carbonImage.loadFromFile("Images/carbon.png")) {
+		carbonImage.create(340, 900);
+	}
+	Texture carbonTexture;
+	carbonTexture.loadFromImage(carbonImage);
+	Sprite carbon;
+	carbon.setTexture(carbonTexture);
+	carbon.setPosition(Vector2f(0, 0));
+
+	Image rightPanelImage;
+	if (!rightPanelImage.loadFromFile("Images/right_panel.png")) {
+		rightPanelImage.create(340, 900);
+	}
+	Texture rightPanelTexture;
+	rightPanelTexture.loadFromImage(rightPanelImage);
+	Sprite carbon2;
+	carbon2.setTexture(rightPanelTexture);
+	carbon2.setPosition(Vector2f(940, 0));
+	gameWindow.setVisible(false);
+
 	window.setFramerateLimit(120);
 	int windowState = 1;
 
@@ -385,15 +112,25 @@ int main(int argc, char** argv) {
 	while (window.isOpen()) {
 		Event event;
 		while (window.pollEvent(event)) {
-			if (event.type == Event::Closed)
+			if (event.type == Event::Closed) {
 				window.close();
+				gameWindow.close();
+			}
 		}
-
+		while (gameWindow.pollEvent(event)) {
+			if(event.type == Event::Closed) {
+				window.close();
+				gameWindow.close();
+			}
+		}
+		//Главное меню
 		if (windowState == 1) {
 			if (Keyboard::isKeyPressed(Keyboard::Return)) {
+				window.setVisible(false);
 				windowState = 2;
 				main.musicOff();
 				gameSound.musicOn();
+				gameWindow.setVisible(true);
 			}
 			Sprite background;
 			Image arg;
@@ -414,7 +151,7 @@ int main(int argc, char** argv) {
 			play.setCharacterSize(30);
 			play.setPosition(90, 450);
 			Text author;
-			author.setString("Created by Svirin Yaroslav, SP-226");
+			author.setString("Created by Svirin Yaroslav");
 			author.setFont(font);
 			author.setFillColor(Color::White);
 			author.setCharacterSize(20);
@@ -432,7 +169,10 @@ int main(int argc, char** argv) {
 			spawnTime += time;
 			spawnTimeAst += time;
 			frame++;
-			if (frame > 200) frame = 50;
+			if (frame > 200) { 
+				frame = 50; 
+				++score;
+			}
 			clock.restart();
 			if (Keyboard::isKeyPressed(Keyboard::Left)) {
 				ship.moveShip(1, time);
@@ -447,7 +187,7 @@ int main(int argc, char** argv) {
 				ship.moveShip(4, time);
 			}
 			ship.changeFireSprite(frame);
-			ship.setFireSprite();
+
 			if (spawnTime > 300)
 				space.createCloseStars();
 			displayCloseStars = space.getCloseStars();
@@ -462,38 +202,66 @@ int main(int argc, char** argv) {
 			}
 
 			displayAst = asteroids.getAsteroids();
-			//��������� �������
+			
 			space.createPlanet();
-			window.clear();
-			window.draw(space.getSpace());//��������� �������
-			if (space.isPlanet()) window.draw(space.getPlanet());
+			gameWindow.clear();
+			gameWindow.draw(space.getSpace());
+			if (space.isPlanet()) gameWindow.draw(space.getPlanet());
 			for (int i = 0; i < displayCloseStars.size(); ++i)
-				window.draw(displayCloseStars[i]);
+				gameWindow.draw(displayCloseStars[i]);
 			for (int i = 0; i < displayFarStars.size(); ++i)
-				window.draw(displayFarStars[i]);
+				gameWindow.draw(displayFarStars[i]);
 			for (int i = 0; i < displayAst.size(); ++i)
-				window.draw(displayAst[i]);
-			window.draw(ship.getSprite());//��������� �������
-			window.draw(ship.getFirstFire());
-			window.draw(ship.getSecondFire());
-			window.display();
+				gameWindow.draw(displayAst[i]);
+			gameWindow.draw(ship.getSprite());
+			gameWindow.draw(ship.getFirstFireSprite());
+			gameWindow.draw(ship.getSecondFireSprite());
+			gameWindow.draw(carbon);
+			gameWindow.draw(carbon2);
+
+			Text highScoreText;
+			highScoreText.setString("High score:\n" + std::to_string(highScore));
+			highScoreText.setFillColor(Color::Red);
+			highScoreText.setFont(font);
+			highScoreText.setCharacterSize(30);
+			highScoreText.setPosition(978, 245);
+
+			Text scoreText;
+			scoreText.setString("Score:\n" + std::to_string(score));
+			scoreText.setFillColor(Color::Red);
+			scoreText.setFont(font);
+			scoreText.setCharacterSize(30);
+			scoreText.setPosition(978, 400);
+			gameWindow.draw(highScoreText);
+			gameWindow.draw(scoreText);
+
+			gameWindow.display();
 			for (int i = 0; i < displayAst.size(); ++i) {
 				if (displayAst[i].getGlobalBounds().intersects(ship.getSprite().getGlobalBounds())) {
+					if (score > highScore) highScore = score;
+					score = 0;
 					asteroids.deleteAsteroids();
 					windowState = 3;
 					gameSound.musicOff();
 					gameOverSound.musicOn();
+					gameWindow.setVisible(false);
+					ship.setSpawn();
+					window.setVisible(true);
 					break;
 				}
-
 			}
-			space.moveStars(time);//����� ��������� �����
+			space.moveStars(time);
 			space.movePlanet();
 			asteroids.moveAsteroids(time);
 		}
 		else {
-			if (Keyboard::isKeyPressed(Keyboard::Escape)) window.close();
+			if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+				window.close();
+				gameWindow.close();
+			}
 			if (Keyboard::isKeyPressed(Keyboard::Return)) {
+				window.setVisible(false);
+				gameWindow.setVisible(true);
 				gameSound.musicOn();
 				windowState = 2;
 			}
