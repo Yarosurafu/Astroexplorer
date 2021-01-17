@@ -53,10 +53,10 @@ SFML является достаточно лёгкой в освоении, т�
 ## Скриншоты
 
 <p align="center">
-     <img src="ReadMe_Assets/main_menu.png" height="320px"></br>
+     <img src="ReadMe_Assets/main_menu.png" height="600px"></br>
      <i>Главное меню</i></br></br>
-     <img src="ReadMe_Assets/game.png" height="320px"></br>
+     <img src="ReadMe_Assets/game.png" height="600px"></br>
      <i>Геймплей</i></br></br>
-     <img src="ReadMe_Assets/game_over.png" height="320px"></br>
+     <img src="ReadMe_Assets/game_over.png" height="600px"></br>
      <i>Экран Game over</i></br></br>
 </p>
